@@ -47,6 +47,10 @@ public abstract class Game {
         return Optional.empty();
     }
 
+    public boolean started() {
+        return !(points[0] == 0 && points[1] == 0);
+    }
+
     public abstract String printScore();
 
     @Override

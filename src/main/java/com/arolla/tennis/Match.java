@@ -1,5 +1,7 @@
 package com.arolla.tennis;
 
+import com.arolla.tennis.game.Game;
+
 import java.util.Optional;
 
 public class Match {
@@ -30,9 +32,17 @@ public class Match {
     }
 
     public String printScore() {
-        return String.valueOf(player1) + "-" + player2 + "\n"
-                + currentSet.printScore() + "\n"
-                + currentSet.currentGame().printScore();
+        String matchScore = String.valueOf(player1) + "-" + player2 + "\n"
+                + currentSet.printScore() + "\n";
+
+        Game currentGame = currentSet.currentGame();
+        if (currentGame.started() && !currentGame.winner().isPresent()) {
+            matchScore += currentGame.printScore() + "\n";
+        }
+
+        matchScore += winner().map(winner -> "GAME, SET, MATCH: " + winner + "\n").orElse("");
+
+        return matchScore;
     }
 
 }

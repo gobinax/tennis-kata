@@ -2,9 +2,8 @@ package com.arolla.tennis;
 
 import org.junit.Test;
 
-import java.util.Optional;
-
-import static com.arolla.tennis.Player.*;
+import static com.arolla.tennis.Player.ALICE;
+import static com.arolla.tennis.Player.BOB;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MatchTest {
@@ -22,6 +21,6 @@ public class MatchTest {
                 .isEqualTo(
                         "ALICE-BOB" + "\n" +
                                 "0-0" + "\n" +
-                                "15-0");
+                                "15-0" + "\n");
     }
 }
