@@ -5,6 +5,7 @@ plugins {
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.9.0'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
 }
 
 
