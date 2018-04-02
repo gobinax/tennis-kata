@@ -64,7 +64,6 @@ public class SetTest {
 
                 new Object[]{"7-5", A, new Player[]{A, A, A, A, A, B, B, B, B, B, A, A}},
                 new Object[]{"5-7", B, new Player[]{A, A, A, A, A, B, B, B, B, B, B, B}},
-
         };
     }
 
@@ -100,6 +99,32 @@ public class SetTest {
         assertThatThrownBy(() -> set.point(A))
                 .as("should not keep playing a game that is already won")
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void should_detect_tie_break_winner() {
+        // GIVEN
+        Set set = new Set(A, B);
+        doNTimes(5, () -> takeGame(set, A));
+        doNTimes(5, () -> takeGame(set, B));
+        takeGame(set, A);
+        takeGame(set, B); // 6-6
+
+        // WHEN
+        doNTimes(6, () -> set.point(A));
+
+        // THEN
+        assertThat(set.printScore())
+                .isEqualTo("7-6");
+
+        assertThat(set.winner())
+                .as("The winner is not the expected one.")
+                .contains(A);
+
+        assertThatThrownBy(() -> set.point(A))
+                .as("should not keep playing a game that is already won")
+                .isInstanceOf(IllegalStateException.class);
+
     }
 
     /**

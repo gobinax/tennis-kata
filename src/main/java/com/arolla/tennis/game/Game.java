@@ -1,19 +1,19 @@
-package com.arolla.tennis;
+package com.arolla.tennis.game;
+
+import com.arolla.tennis.Player;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class Game {
+public abstract class Game {
 
     ////////////////////////
     // FIELD, CONSTRUCTOR //
     ////////////////////////
 
-    private final static String[] pointsLabel = {"0", "15", "30", "40"};
-
-    private final List<Player> players;
-    private int points[] = {0, 0};
+    protected final List<Player> players;
+    protected int points[] = {0, 0};
 
     public Game(Player player1, Player player2) {
         players = Arrays.asList(player1, player2);
@@ -47,37 +47,21 @@ public class Game {
         return Optional.empty();
     }
 
-    public String printScore() {
-        int winnerIdx = winnerIdx();
-        if (winnerIdx != -1) {
-            return "Game: " + players.get(winnerIdx);
-        }
-
-        if (isDeuce()) {
-            return "Deuce";
-        }
-
-        int advantageIdx = advantageIdx();
-        if (advantageIdx != -1) {
-            return "Advantage: " + players.get(advantageIdx);
-        }
-
-        return pointsLabel[points[0]] + "-" + pointsLabel[points[1]];
-    }
+    public abstract String printScore();
 
     @Override
     public String toString() {
         return printScore();
     }
 
-    /////////////////////
-    // PRIVATE METHODS //
-    /////////////////////
+    ///////////////////////////////
+    // PRIVATE/PROTECTED METHODS //
+    ///////////////////////////////
 
     /**
      * @return 0: player1 wins, 1: player2 wins, -1: no winner yet
      */
-    private int winnerIdx() {
+    protected int winnerIdx() {
         if (isWinner(0)) return 0;
         if (isWinner(1)) return 1;
         return -1;
@@ -86,50 +70,30 @@ public class Game {
     /**
      * @return true if playerIdx won this game
      */
-    private boolean isWinner(int playerIdx) {
+    protected boolean isWinner(int playerIdx) {
         return haveEnoughPoint(playerIdx) && has2PointsAdvantage(playerIdx);
-    }
-
-    private boolean isDeuce() {
-        return points[0] >= 3 && points[0] == points[1];
-    }
-
-    /**
-     * @return 0: player1 has advantage, 1: player2 has advantage, -1: no advantage at the moment
-     */
-    private int advantageIdx() {
-        if (hasAdvantage(0)) return 0;
-        if (hasAdvantage(1)) return 1;
-        return -1;
-    }
-
-    /**
-     * @return true if player has advantage on other player
-     */
-    private boolean hasAdvantage(int playerIdx) {
-        return haveEnoughPoint(playerIdx)
-                && !has2PointsAdvantage(playerIdx)
-                && hasMorePoints(playerIdx);
     }
 
     /**
      * @return true if player has more points than other player
      */
-    private boolean hasMorePoints(int playerIdx) {
+    protected boolean hasMorePoints(int playerIdx) {
         return points[playerIdx] > points[otherPlayerIdx(playerIdx)];
     }
 
     /**
      * @return true if player has enought point to win the game or being in deuce situation
      */
-    private boolean haveEnoughPoint(int playerIdx) {
-        return points[playerIdx] > pointsLabel.length - 1;
+    protected boolean haveEnoughPoint(int playerIdx) {
+        return points[playerIdx] >= nbPointToWin();
     }
+
+    protected abstract int nbPointToWin();
 
     /**
      * @return true if player has 2 more points than other player
      */
-    private boolean has2PointsAdvantage(int playerIdx) {
+    protected boolean has2PointsAdvantage(int playerIdx) {
         return points[playerIdx] - points[otherPlayerIdx(playerIdx)] > 1;
     }
 
