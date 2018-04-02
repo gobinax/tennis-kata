@@ -30,7 +30,9 @@ public class Match {
     }
 
     public String printScore() {
-        return String.valueOf(player1) + "-" + player2 + "\n" + currentSet.printScore();
+        return String.valueOf(player1) + "-" + player2 + "\n"
+                + currentSet.printScore() + "\n"
+                + currentSet.currentGame().printScore();
     }
 
 }

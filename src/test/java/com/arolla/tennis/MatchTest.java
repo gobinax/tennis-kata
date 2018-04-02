@@ -15,10 +15,9 @@ public class MatchTest {
 
         // WHEN
         match.point(ALICE);
-        Optional<Player> maybeWinner = match.winner();
 
         //THEN
-        assertThat(maybeWinner).isEmpty();
+        assertThat(match.winner()).isEmpty();
         assertThat(match.printScore())
                 .isEqualTo(
                         "ALICE-BOB" + "\n" +
