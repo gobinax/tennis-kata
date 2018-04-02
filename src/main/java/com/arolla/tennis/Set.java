@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Set {
+    public static final int NB_GAMES_TO_WIN = 6;
 
     ////////////////////////
     // FIELD, CONSTRUCTOR //
@@ -42,6 +43,10 @@ public class Set {
 
 
     public Optional<Player> winner() {
+        int winnerIdx = winnerIdx();
+        if (winnerIdx != -1) {
+            return Optional.of(players.get(winnerIdx));
+        }
         return Optional.empty();
     }
 
@@ -61,6 +66,43 @@ public class Set {
     /////////////////////
     // PRIVATE METHODS //
     /////////////////////
+
+    /**
+     * @return 0: player1 wins, 1: player2 wins, -1: no winner yet
+     */
+    private int winnerIdx() {
+        if (isWinner(0)) return 0;
+        if (isWinner(1)) return 1;
+        return -1;
+    }
+
+    /**
+     * @return true if playerIdx won this game
+     */
+    private boolean isWinner(int playerIdx) {
+        return haveEnoughPoint(playerIdx) && has2PointsAdvantage(playerIdx);
+    }
+
+    /**
+     * @return true if player has enought point to win the game or being in deuce situation
+     */
+    private boolean haveEnoughPoint(int playerIdx) {
+        return points[playerIdx] >= NB_GAMES_TO_WIN;
+    }
+
+    /**
+     * @return true if player has 2 more points than other player
+     */
+    private boolean has2PointsAdvantage(int playerIdx) {
+        return points[playerIdx] - points[otherPlayerIdx(playerIdx)] > 1;
+    }
+
+    /**
+     * @return the index of the other player
+     */
+    private int otherPlayerIdx(int playerIdx) {
+        return (playerIdx == 0) ? 1 : 0;
+    }
 
     private void increasePoints(int playerIdx) {
         points[playerIdx]++;
