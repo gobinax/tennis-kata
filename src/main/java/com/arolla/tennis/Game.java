@@ -18,7 +18,7 @@ public class Game {
 
     public void point(Player scorer) {
         if (winner().isPresent()) {
-            throw new IllegalStateException("Cannot play more point: this game is over");
+            throw new IllegalStateException("Cannot play more point: this game is already won by " + winner().get());
         }
 
         if (scorer.equals(player1)) {
@@ -33,6 +33,12 @@ public class Game {
     }
 
     public Optional<Player> winner() {
+        if (score.points1 > points.length - 1) {
+            return Optional.of(player1);
+        }
+        if (score.points2 > points.length - 1) {
+            return Optional.of(player2);
+        }
         return Optional.empty();
     }
 

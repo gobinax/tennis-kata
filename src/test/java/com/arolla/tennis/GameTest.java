@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import static com.arolla.tennis.Player.ALICE;
 import static com.arolla.tennis.Player.BOB;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(JUnitParamsRunner.class)
 public class GameTest {
@@ -45,5 +46,22 @@ public class GameTest {
         // THEN
         assertThat(game.printScore())
                 .isEqualTo(expectedPrintedScore);
+    }
+
+    @Test
+    public void should_not_score_more_point_when_game_is_won() {
+        // GIVEN
+        Game game = new Game(A, B);
+
+        // WHEN
+        game.point(A);
+        game.point(A);
+        game.point(A);
+        game.point(A); // WIN
+
+        // THEN
+        assertThatThrownBy(() -> game.point(A))
+                .as("should not keep playing a game that is already won")
+                .isInstanceOf(IllegalStateException.class);
     }
 }
