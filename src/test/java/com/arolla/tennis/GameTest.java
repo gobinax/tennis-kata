@@ -64,4 +64,42 @@ public class GameTest {
                 .as("should not keep playing a game that is already won")
                 .isInstanceOf(IllegalStateException.class);
     }
+
+    public Object params_deuce_rule() {
+        return new Object[]{
+                new Object[]{"Deuce", new Player[]{}},
+                new Object[]{"Deuce", new Player[]{A, B}},
+
+                new Object[]{"Advantage: ALICE", new Player[]{A}},
+                new Object[]{"Advantage: ALICE", new Player[]{A, B, A}},
+                new Object[]{"Advantage: ALICE", new Player[]{B, A, A}},
+
+                new Object[]{"Advantage: BOB", new Player[]{B}},
+                new Object[]{"Advantage: BOB", new Player[]{B, A, B}},
+                new Object[]{"Advantage: BOB", new Player[]{A, B, B}},
+
+                new Object[]{"Game: ALICE", new Player[]{A, A}},
+                new Object[]{"Game: ALICE", new Player[]{B, A, A, A}},
+                new Object[]{"Game: BOB", new Player[]{B, B}},
+                new Object[]{"Game: BOB", new Player[]{A, B, B, B}},
+        };
+    }
+
+    @Test
+    @Parameters(method = "params_deuce_rule")
+    public void should_handle_deuce_rule(String expectedPrintedScore, Player... points) {
+        // GIVEN
+        Game game = new Game(A, B);
+        game.point(A).point(A).point(A);
+        game.point(B).point(B).point(B); //DEUCE
+
+        // WHEN
+        for (Player player : points) {
+            game.point(player);
+        }
+
+        // THEN
+        assertThat(game.printScore())
+                .isEqualTo(expectedPrintedScore);
+    }
 }
