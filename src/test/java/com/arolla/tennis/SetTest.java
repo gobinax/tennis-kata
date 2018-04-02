@@ -64,7 +64,6 @@ public class SetTest {
 
                 new Object[]{"7-5", A, new Player[]{A, A, A, A, A, B, B, B, B, B, A, A}},
                 new Object[]{"5-7", B, new Player[]{A, A, A, A, A, B, B, B, B, B, B, B}},
-
         };
     }
 

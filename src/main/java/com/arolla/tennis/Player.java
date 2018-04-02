@@ -1,3 +1,3 @@
 package com.arolla.tennis;
 
-enum Player { ALICE, BOB }
+public enum Player { ALICE, BOB }

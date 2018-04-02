@@ -1,5 +1,8 @@
 package com.arolla.tennis;
 
+import com.arolla.tennis.game.Game;
+import com.arolla.tennis.game.RegularGame;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +22,7 @@ public class Set {
 
     public Set(Player player1, Player player2) {
         players = Arrays.asList(player1, player2);
-        currentGame = new Game(player1, player2);
+        currentGame = new RegularGame(player1, player2);
     }
 
     ////////////////
@@ -106,6 +109,6 @@ public class Set {
 
     private void increasePoints(int playerIdx) {
         points[playerIdx]++;
-        currentGame = new Game(players.get(0), players.get(1));
+        currentGame = new RegularGame(players.get(0), players.get(1));
     }
 }

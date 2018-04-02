@@ -1,5 +1,7 @@
 package com.arolla.tennis;
 
+import com.arolla.tennis.game.Game;
+import com.arolla.tennis.game.RegularGame;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
@@ -36,7 +38,7 @@ public class GameTest {
     @Parameters(method = "params_keep_score")
     public void should_keep_game_score_from_0_to_win(String expectedPrintedScore, Player... points) {
         // GIVEN
-        Game game = new Game(A, B);
+        Game game = new RegularGame(A, B);
 
         // WHEN
         for (Player player : points) {
@@ -51,7 +53,7 @@ public class GameTest {
     @Test
     public void should_not_score_more_point_when_game_is_won() {
         // GIVEN
-        Game game = new Game(A, B);
+        Game game = new RegularGame(A, B);
 
         // WHEN
         game.point(A);
@@ -89,7 +91,7 @@ public class GameTest {
     @Parameters(method = "params_deuce_rule")
     public void should_handle_deuce_rule(String expectedPrintedScore, Player... points) {
         // GIVEN
-        Game game = new Game(A, B);
+        Game game = new RegularGame(A, B);
         game.point(A).point(A).point(A);
         game.point(B).point(B).point(B); //DEUCE
 
