@@ -40,40 +40,47 @@ public class Game {
     }
 
     public Optional<Player> winner() {
-        if (isWinner(0)) {
-            return Optional.of(players.get(0));
-        }
-        if (isWinner(1)) {
-            return Optional.of(players.get(1));
+        int winnerIdx = winnerIdx();
+        if (winnerIdx != -1) {
+            return Optional.of(players.get(winnerIdx));
         }
         return Optional.empty();
     }
 
-
     public String printScore() {
-        if (isWinner(0)) {
-            return "Game: " + players.get(0);
+        int winnerIdx = winnerIdx();
+        if (winnerIdx != -1) {
+            return "Game: " + players.get(winnerIdx);
         }
-        if (isWinner(1)) {
-            return "Game: " + players.get(1);
-        }
+
         if (isDeuce()) {
             return "Deuce";
         }
-        if (hasAdvantage(0)) {
-            return "Advantage: " + players.get(0);
+
+        int advantageIdx = advantageIdx();
+        if (advantageIdx != -1) {
+            return "Advantage: " + players.get(advantageIdx);
         }
-        if (hasAdvantage(1)) {
-            return "Advantage: " + players.get(1);
-        }
+
         return pointsLabel[points[0]] + "-" + pointsLabel[points[1]];
     }
-
 
     /////////////////////
     // PRIVATE METHODS //
     /////////////////////
 
+    /**
+     * @return 0: player1 wins, 1: player2 wins, -1: no winner yet
+     */
+    private int winnerIdx() {
+        if (isWinner(0)) return 0;
+        if (isWinner(1)) return 1;
+        return -1;
+    }
+
+    /**
+     * @return true if playerIdx won this game
+     */
     private boolean isWinner(int playerIdx) {
         return haveEnoughPoint(playerIdx) && has2PointsAdvantage(playerIdx);
     }
@@ -82,24 +89,48 @@ public class Game {
         return points[0] >= 3 && points[0] == points[1];
     }
 
+    /**
+     * @return 0: player1 has advantage, 1: player2 has advantage, -1: no advantage at the moment
+     */
+    private int advantageIdx() {
+        if (hasAdvantage(0)) return 0;
+        if (hasAdvantage(1)) return 1;
+        return -1;
+    }
+
+    /**
+     * @return true if player has advantage on other player
+     */
     private boolean hasAdvantage(int playerIdx) {
         return haveEnoughPoint(playerIdx)
                 && !has2PointsAdvantage(playerIdx)
                 && hasMorePoints(playerIdx);
     }
 
+    /**
+     * @return true if player has more points than other player
+     */
     private boolean hasMorePoints(int playerIdx) {
         return points[playerIdx] > points[otherPlayerIdx(playerIdx)];
     }
 
+    /**
+     * @return true if player has enought point to win the game or being in deuce situation
+     */
     private boolean haveEnoughPoint(int playerIdx) {
         return points[playerIdx] > pointsLabel.length - 1;
     }
 
+    /**
+     * @return true if player has 2 more points than other player
+     */
     private boolean has2PointsAdvantage(int playerIdx) {
         return points[playerIdx] - points[otherPlayerIdx(playerIdx)] > 1;
     }
 
+    /**
+     * @return the index of the other player
+     */
     private int otherPlayerIdx(int playerIdx) {
         return (playerIdx == 0) ? 1 : 0;
     }
