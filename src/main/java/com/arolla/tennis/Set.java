@@ -2,6 +2,7 @@ package com.arolla.tennis;
 
 import com.arolla.tennis.game.Game;
 import com.arolla.tennis.game.RegularGame;
+import com.arolla.tennis.game.TieBreak;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Set {
 
     private final List<Player> players;
 
-    private int points[] = {0, 0};
+    private int gameCount[] = {0, 0};
 
     private Game currentGame;
 
@@ -38,7 +39,7 @@ public class Set {
         currentGame.winner()
                 .ifPresent(winner -> {
                     int playerIdx = players.indexOf(winner);
-                    increasePoints(playerIdx);
+                    increaseGameCount(playerIdx);
                 });
 
         return this;
@@ -54,7 +55,7 @@ public class Set {
     }
 
     public String printScore() {
-        return "" + points[0] + "-" + points[1];
+        return "" + gameCount[0] + "-" + gameCount[1];
     }
 
     public Game currentGame() {
@@ -83,21 +84,27 @@ public class Set {
      * @return true if playerIdx won this game
      */
     private boolean isWinner(int playerIdx) {
-        return haveEnoughPoint(playerIdx) && has2PointsAdvantage(playerIdx);
+        return (haveEnoughPoint(playerIdx) && has2PointsAdvantage(playerIdx))
+                || isTieBreakWinner(playerIdx);
+    }
+
+    private boolean isTieBreakWinner(int playerIdx) {
+        return gameCount[playerIdx] == NB_GAMES_TO_WIN + 1
+                && gameCount[otherPlayerIdx(playerIdx)] == NB_GAMES_TO_WIN;
     }
 
     /**
      * @return true if player has enought point to win the game or being in deuce situation
      */
     private boolean haveEnoughPoint(int playerIdx) {
-        return points[playerIdx] >= NB_GAMES_TO_WIN;
+        return gameCount[playerIdx] >= NB_GAMES_TO_WIN;
     }
 
     /**
      * @return true if player has 2 more points than other player
      */
     private boolean has2PointsAdvantage(int playerIdx) {
-        return points[playerIdx] - points[otherPlayerIdx(playerIdx)] > 1;
+        return gameCount[playerIdx] - gameCount[otherPlayerIdx(playerIdx)] > 1;
     }
 
     /**
@@ -107,8 +114,14 @@ public class Set {
         return (playerIdx == 0) ? 1 : 0;
     }
 
-    private void increasePoints(int playerIdx) {
-        points[playerIdx]++;
-        currentGame = new RegularGame(players.get(0), players.get(1));
+    private void increaseGameCount(int playerIdx) {
+        gameCount[playerIdx]++;
+        currentGame = isTieBreakNecessary()
+                ? new TieBreak(players.get(0), players.get(1))
+                : new RegularGame(players.get(0), players.get(1));
+    }
+
+    private boolean isTieBreakNecessary() {
+        return gameCount[0] == NB_GAMES_TO_WIN && gameCount[1] == NB_GAMES_TO_WIN;
     }
 }
