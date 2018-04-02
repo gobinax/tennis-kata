@@ -65,6 +65,11 @@ public class Game {
         return pointsLabel[points[0]] + "-" + pointsLabel[points[1]];
     }
 
+    @Override
+    public String toString() {
+        return printScore();
+    }
+
     /////////////////////
     // PRIVATE METHODS //
     /////////////////////
