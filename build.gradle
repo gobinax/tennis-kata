@@ -1,6 +1,9 @@
 plugins {
     id 'java'
+    id 'application'
 }
+
+mainClassName = 'com.arolla.tennis.TennisDemo'
 
 dependencies {
     testCompile 'junit:junit:4.12'
